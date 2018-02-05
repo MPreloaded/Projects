@@ -1,0 +1,19 @@
+{
+  "name": "nnetwork",
+  "version": "0.1.0",
+  "description": "My first try to implement a neural network",
+  "main": "script.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "neural",
+    "network",
+    "test"
+  ],
+  "author": "jkaping",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^22.1.4"
+  }
+}
