@@ -81,4 +81,24 @@ it('Matrix.add (Failure: Matrices not same dimensions)', () => {
   expect(() => {
     Matrix.add(m, n);
   }).toThrow();
-})
+});
+
+
+it('transpose (Success)', () => {
+  let m = new Matrix(2, 3);
+  m.data[0] = [1, 2, 3];
+  m.data[1] = [4, 5, 6];
+
+  expect(Matrix.transpose(m)).toEqual({
+    rows: 3,
+    cols: 2,
+    data: [[1, 4], [2, 5], [3, 6]]
+  })
+});
+
+it('transpose (Failure: Not a matrix)', () => {
+  let m = 0;
+  expect(() => {
+    Matrix.transpose(m)
+  }).toThrow();
+});

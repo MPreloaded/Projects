@@ -39,6 +39,20 @@ class Matrix {
     }
     return result;
   }
+
+  static transpose(a) {
+    if (!(a instanceof Matrix)) {
+      throw new Error('A needs to have type Matrix"');
+    }
+
+    let result = new Matrix(a.cols, a.rows);
+    for (let i = 0; i < result.rows; i++) {
+      for (let j = 0; j < result.cols; j++) {
+        result.data[i][j] = a.data[j][i];
+      }
+    }
+    return result;
+  }
 }
 
 
