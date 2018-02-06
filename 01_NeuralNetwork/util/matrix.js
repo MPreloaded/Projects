@@ -15,6 +15,10 @@ class Matrix {
   }
 
   static fromArray(array) {
+    if (!(array instanceof Array)) {
+      throw new Error('Array need to have type Array!')
+    }
+
     let result = new Matrix(array.length, 1)
     for (let i = 0; i < array.length; i++) {
       result.data[i][0] = array[i]
@@ -49,6 +53,27 @@ class Matrix {
     for (let i = 0; i < result.rows; i++) {
       for (let j = 0; j < result.cols; j++) {
         result.data[i][j] = a.data[j][i]
+      }
+    }
+    return result
+  }
+
+  static multiply(a, b) {
+    if (!((a instanceof Matrix) && (b instanceof Matrix))) {
+      throw new Error('A and B need to have type Matrix!')
+    }
+
+    if(a.cols != b.rows) {
+      throw new Error('Columns of A have to match Rows of B!')
+    }
+
+    let result = new Matrix(a.rows, b.cols)
+
+    for(let i = 0; i < result.rows; i++) {
+      for(let j = 0; j < result.cols; j++) {
+        for(let k = 0; k < a.cols; k++) {
+          result.data[i][j] += a.data[i][k] * b.data[k][j]
+        }
       }
     }
     return result

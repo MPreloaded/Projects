@@ -16,10 +16,8 @@ it('constructor (Success)', () => {
   })
 })
 
-it('Matrix.fromArray (Success)', () => {
-  let m = Matrix.fromArray([1, 2, 3])
-
-  expect(m).toEqual({
+it('fromArray (Success)', () => {
+  expect(Matrix.fromArray([1, 2, 3])).toEqual({
     rows: 3,
     cols: 1,
     data: [
@@ -30,7 +28,13 @@ it('Matrix.fromArray (Success)', () => {
   })
 })
 
-it('Matrix.add (Success)', () => {
+it('fromArray (Failure: Not an Array)', () => {
+  expect(() => {
+    Matrix.fromArray(0)
+  }).toThrow()
+})
+
+it('add (Success)', () => {
   let m = new Matrix(2, 2)
   m.data[0] = [1, 2]
   m.data[1] = [3, 4]
@@ -48,7 +52,7 @@ it('Matrix.add (Success)', () => {
   })
 })
 
-it('Matrix.add (Failure: A not a Matrix)', () => {
+it('add (Failure: A not a Matrix)', () => {
   let m = 0
   let n = new Matrix(2, 2)
   n.data[0] = [1, 2]
@@ -59,7 +63,7 @@ it('Matrix.add (Failure: A not a Matrix)', () => {
   }).toThrow()
 })
 
-it('Matrix.add (Failure: B not a Matrix)', () => {
+it('add (Failure: B not a Matrix)', () => {
   let m = 0
   let n = new Matrix(2, 2)
   n.data[0] = [1, 2]
@@ -70,7 +74,7 @@ it('Matrix.add (Failure: B not a Matrix)', () => {
   }).toThrow()
 })
 
-it('Matrix.add (Failure: Matrices not same dimensions)', () => {
+it('add (Failure: Matrices not same dimensions)', () => {
   let m = new Matrix(2, 2)
   m.data[0] = [1, 2]
   m.data[1] = [3, 4]
@@ -92,7 +96,11 @@ it('transpose (Success)', () => {
   expect(Matrix.transpose(m)).toEqual({
     rows: 3,
     cols: 2,
-    data: [[1, 4], [2, 5], [3, 6]]
+    data: [
+      [1, 4], 
+      [2, 5], 
+      [3, 6]
+    ]
   })
 })
 
@@ -100,5 +108,60 @@ it('transpose (Failure: Not a matrix)', () => {
   let m = 0
   expect(() => {
     Matrix.transpose(m)
+  }).toThrow()
+})
+
+it('multiply (Success)', () => {
+  let m = new Matrix(2, 3)
+  m.data[0] = [1, 2, 1]
+  m.data[1] = [0, 1, 2]
+  let n = new Matrix(3, 1)
+  n.data[0] = [1]
+  n.data[1] = [2]
+  n.data[2] = [0]
+
+  expect(Matrix.multiply(m, n)).toEqual({
+    rows: 2,
+    cols: 1,
+    data: [
+      [5], 
+      [2]
+    ]
+  })
+})
+
+it('multiply (Failure: A not a matrix)', () => {
+  let m = 0
+  let n = new Matrix(3, 1)
+  n.data[0] = [1]
+  n.data[1] = [2]
+  n.data[2] = [0]
+
+  expect(() => {
+    Matrix.multiply(m, n)
+  }).toThrow()
+})
+
+it('multiply (Failure: B not a matrix)', () => {
+  let m = new Matrix(2, 3)
+  m.data[0] = [1, 2, 1]
+  m.data[1] = [0, 1, 2]
+  let n = 0
+
+  expect(() => {
+    Matrix.multiply(m, n)
+  }).toThrow()
+})
+
+it('multiply (Failure: Columns of A do not match Rows of B)', () => {
+  let m = new Matrix(1, 2)
+  m.data[0] = [1, 2]
+  let n = new Matrix(3, 1)
+  n.data[0] = [1]
+  n.data[1] = [2]
+  n.data[2] = [0]
+
+  expect(() => {
+    Matrix.multiply(m, n)
   }).toThrow()
 })
