@@ -4,7 +4,8 @@
   "description": "My first try to implement a neural network",
   "main": "script.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "watch": "jest --watch"
   },
   "keywords": [
     "neural",
