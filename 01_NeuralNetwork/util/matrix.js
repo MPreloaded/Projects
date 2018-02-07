@@ -1,3 +1,40 @@
+/** Matrix-Factory */
+/**const Matrix = (rows, cols) => {
+  
+  const _createMatrix = (rows, cols) => {
+    let data = []
+    for(let i = 0; i < rows; i++) {
+      let tmp = []
+      for(let j = 0; j < cols; j++) {
+        tmp.push[0]
+      }
+      data.push[tmp]
+    }
+    
+    return {
+      rows,
+      cols,
+      data
+    }
+  }
+  
+  let Matrix = _createMatrix(rows, cols)
+
+  Matrix.fromArray = (array) => {
+    if (!(array instanceof Array)) {
+      throw new Error('Array need to have type Array!')
+    }
+
+    let result = createMatrix(array.length, 1)
+    for (let i = 0; i < array.length; i++) {
+      result.data[i][0] = array[i]
+    }
+    return result
+  }
+
+  return Matrix
+} */
+
 class Matrix {
 
   constructor(rows, cols) {
@@ -79,7 +116,4 @@ class Matrix {
     return result
   }
 }
-
-
-
 module.exports = Matrix

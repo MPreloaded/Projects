@@ -6,7 +6,7 @@ it('constructor (Success)', () => {
   m.data[1] = [4, 5, 6]
   m.data[1][1] = 7
 
-  expect(m).toEqual({
+  expect(m).toMatchObject({
     rows: 2,
     cols: 3,
     data: [
@@ -17,7 +17,7 @@ it('constructor (Success)', () => {
 })
 
 it('fromArray (Success)', () => {
-  expect(Matrix.fromArray([1, 2, 3])).toEqual({
+  expect(Matrix.fromArray([1, 2, 3])).toMatchObject({
     rows: 3,
     cols: 1,
     data: [
@@ -42,7 +42,7 @@ it('add (Success)', () => {
   n.data[0] = [5, 6]
   n.data[1] = [7, 8]
 
-  expect(Matrix.add(m, n)).toEqual({
+  expect(Matrix.add(m, n)).toMatchObject({
     rows: 2,
     cols: 2,
     data: [
@@ -93,7 +93,7 @@ it('transpose (Success)', () => {
   m.data[0] = [1, 2, 3]
   m.data[1] = [4, 5, 6]
 
-  expect(Matrix.transpose(m)).toEqual({
+  expect(Matrix.transpose(m)).toMatchObject({
     rows: 3,
     cols: 2,
     data: [
@@ -120,7 +120,7 @@ it('multiply (Success)', () => {
   n.data[1] = [2]
   n.data[2] = [0]
 
-  expect(Matrix.multiply(m, n)).toEqual({
+  expect(Matrix.multiply(m, n)).toMatchObject({
     rows: 2,
     cols: 1,
     data: [
