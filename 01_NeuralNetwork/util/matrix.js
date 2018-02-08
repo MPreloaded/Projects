@@ -78,6 +78,25 @@ class Matrix {
     }
     return result
   }
+
+  randomize(a, b) {
+    let min, max
+    if(typeof b === 'undefined') {
+      min = 0
+      max = a || 1
+    } else {
+      min = (a <= b) ? a : b
+      max = (a <= b) ? b : a
+    }
+  
+    for(let i = 0; i < this.rows; i++) {
+      for(let j = 0; j < this.cols; j++) {
+        this.data[i][j] = (min + (Math.random() * (max-min)))
+       }
+    }
+    
+    return this
+  }
 }
 module.exports = Matrix
 

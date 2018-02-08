@@ -54,7 +54,7 @@ describe("Matrix", () => {
   })
 
   it('add() should throw an error when the first parameter is not a matrix', () => {
-    let m = 0
+    const m = 0
     let n = new Matrix(2, 2)
     n.data[0] = [1, 2]
     n.data[1] = [3, 4]
@@ -65,7 +65,7 @@ describe("Matrix", () => {
   })
 
   it('add() should throw an error when the second parameter is not a matrix', () => {
-    let m = 0
+    const m = 0
     let n = new Matrix(2, 2)
     n.data[0] = [1, 2]
     n.data[1] = [3, 4]
@@ -106,7 +106,7 @@ describe("Matrix", () => {
   })
 
   it('transpose() should return an error when no matrix is provided', () => {
-    let m = 0
+    const m = 0
     expect(() => {
       Matrix.transpose(m)
     }).toThrow()
@@ -132,7 +132,7 @@ describe("Matrix", () => {
   })
 
   it('multiply() should throw an error when the first parameter is not a matrix', () => {
-    let m = 0
+    const m = 0
     let n = new Matrix(3, 1)
     n.data[0] = [1]
     n.data[1] = [2]
@@ -147,7 +147,7 @@ describe("Matrix", () => {
     let m = new Matrix(2, 3)
     m.data[0] = [1, 2, 1]
     m.data[1] = [0, 1, 2]
-    let n = 0
+    const n = 0
 
     expect(() => {
       Matrix.multiply(m, n)
@@ -165,5 +165,55 @@ describe("Matrix", () => {
     expect(() => {
       Matrix.multiply(m, n)
     }).toThrow()
+  })
+
+  it('randomize() should assign random values between 0 and 1 to each position in the matrix', () => {
+    let m = new Matrix(2, 2)
+    m.randomize()
+
+    let sum = 0
+    for(let i = 0; i < 2; i++) {
+      for(let j = 0; j < 2; j++) {
+        expect(m.data[i][j]).toBeGreaterThanOrEqual(0)
+        expect(m.data[i][j]).toBeLessThanOrEqual(1)
+        sum += m.data[i][j]
+      }
+    }
+    expect(sum).not.toEqual(0)
+  })
+
+  it('randomize() should be chainable', () => {
+    let m = (new Matrix(1, 1)).randomize()
+
+    expect(m).toBeDefined()
+    expect(m).toMatchObject({
+      rows: 1,
+      cols: 1,
+    })
+    expect(m.data).toBeInstanceOf(Array)
+  })
+
+  it('randomize(a, b) should assign random values between a and b', () => {
+    let m = new Matrix(2, 2)
+    m.randomize(2, 3) 
+
+    for(let i = 0; i < 2; i++) {
+      for(let j = 0; j < 2; j++) {
+        expect(m.data[i][j]).toBeGreaterThanOrEqual(2)
+        expect(m.data[i][j]).toBeLessThanOrEqual(3)
+      }
+    }
+  })
+
+  it('randomize(a) should assign random values between 0 and a', () => {
+    let m = new Matrix(2, 2)
+    m.randomize(5) 
+
+    for(let i = 0; i < 2; i++) {
+      for(let j = 0; j < 2; j++) {
+        expect(m.data[i][j]).toBeGreaterThanOrEqual(0)
+        expect(m.data[i][j]).toBeLessThanOrEqual(5)
+      }
+    }
   })
 })
