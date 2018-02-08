@@ -17,6 +17,15 @@ describe("Matrix", () => {
     })
   })
 
+  it('constructor should throw an error when parameters are not integers', () => {
+    expect(() => {
+      const m = new Matrix('a', 1)
+    }).toThrow()
+    expect(() => {
+      const m = new Matrix(1, 'a')
+    }).toThrow()
+  })
+
   it('fromArray() should create a matrix object from an array', () => {
     expect(Matrix.fromArray([1, 2, 3])).toMatchObject({
       rows: 3,

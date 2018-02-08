@@ -1,6 +1,11 @@
 class Matrix {
 
   constructor(rows, cols) {
+    if(!Number.isInteger(rows))
+      throw new Error('Received a non integer in parameter "rows"!')
+    if(!Number.isInteger(cols))
+      throw new Error('Received a non integer in parameter "cols"!')
+
     this.rows = rows
     this.cols = cols
     this.data = []
