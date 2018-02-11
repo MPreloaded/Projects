@@ -9,16 +9,8 @@ describe('NeuralNetwork', () => {
       hidden_neurons: 2,
       output_neurons: 1,
     })
-    expect(nnetwork.weights_i2h).toBeInstanceOf(Matrix)
-    expect(nnetwork.weights_i2h).toMatchObject({
-      rows: 2,
-      cols: 2,
-    })
-    expect(nnetwork.weights_h2o).toBeInstanceOf(Matrix)
-    expect(nnetwork.weights_h2o).toMatchObject({
-      rows: 2,
-      cols: 1
-    })
+    expect(Matrix.isMatrix(nnetwork.weights_i2h)).toBe(true)
+    expect(Matrix.isMatrix(nnetwork.weights_h2o)).toBe(true)
   })
 
   it('constructor should initialize weights with random values between -1 and 1', () => {
@@ -26,13 +18,13 @@ describe('NeuralNetwork', () => {
     let sum = 0
     for(let i = 0; i < 2; i++) {
       for(let j = 0; j < 2; j++) {
-        expect(nnetwork.weights_i2h.data[i][j]).toBeGreaterThanOrEqual(-1)
-        expect(nnetwork.weights_i2h.data[i][j]).toBeLessThanOrEqual(1)
-        sum += nnetwork.weights_i2h.data[i][j]
+        expect(nnetwork.weights_i2h[i][j]).toBeGreaterThanOrEqual(-1)
+        expect(nnetwork.weights_i2h[i][j]).toBeLessThanOrEqual(1)
+        sum += nnetwork.weights_i2h[i][j]
       }
-      expect(nnetwork.weights_h2o.data[i][0]).toBeGreaterThanOrEqual(-1)
-      expect(nnetwork.weights_h2o.data[i][0]).toBeLessThanOrEqual(1)
-      sum += nnetwork.weights_h2o.data[i][0]
+      expect(nnetwork.weights_h2o[i][0]).toBeGreaterThanOrEqual(-1)
+      expect(nnetwork.weights_h2o[i][0]).toBeLessThanOrEqual(1)
+      sum += nnetwork.weights_h2o[i][0]
     }
     expect(sum).not.toEqual(0)
   })

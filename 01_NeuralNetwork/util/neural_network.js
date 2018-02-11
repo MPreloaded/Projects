@@ -12,11 +12,8 @@ class NeuralNetwork {
     this.input_neurons =  input
     this.hidden_neurons =  hidden
     this.output_neurons =  output
-    this.weights_i2h =  new Matrix(input, hidden)
-    this.weights_h2o =  new Matrix(hidden, output)
-
-    this.weights_i2h.randomize(-1, 1)
-    this.weights_h2o.randomize(-1, 1)
+    this.weights_i2h = Matrix.randomize(input, hidden, -1, 1)
+    this.weights_h2o = Matrix.randomize(hidden, output, -1, 1)
   }
 }
 
