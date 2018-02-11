@@ -1,228 +1,309 @@
-const Matrix = require('./matrix')
+const matrix = require('./matrix')
 
-describe("Matrix", () => {
-  it('constructor should construct a matrix object', () => {
-    let m = new Matrix(2, 3)
-    m.data[0] = [1, 2, 3]
-    m.data[1] = [4, 5, 6]
-    m.data[1][1] = 7
+describe('matrix-factory', () => {
+  
+  describe('createMatrix()', () => {
+    it('should create a matrix with rows and cols', () => {
+      expect(matrix.createMatrix(2, 3)).toEqual([[0, 0, 0], [0, 0, 0]])
+    })
 
-    expect(m).toMatchObject({
-      rows: 2,
-      cols: 3,
-      data: [
-        [1, 2, 3],
-        [4, 7, 6]
-      ]
+    it('should create a matrix based on given one-dimensional array', () => {
+      expect(matrix.createMatrix([1, 2, 3])).toEqual([[1, 2, 3]])
+    })
+
+    it('should throw TypeError when given rows or columns are less or equal 0', () => {
+      expect(() => {
+        matrix.createMatrix(0, 0)
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.createMatrix(-1, 1)
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.createMatrix(1, -1)
+      }).toThrow(TypeError)
+    })
+
+    it('should throw TypeError on other cases', () => {
+      expect(() => {
+        matrix.createMatrix('wrong input')
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.createMatrix(['wrong input', 'a', 'b'])
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.createMatrix([0, 1, 'wrong input'])
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.createMatrix()
+      }).toThrow(TypeError)
     })
   })
 
-  it('constructor should throw an error when parameters are not integers', () => {
-    expect(() => {
-      const m = new Matrix('a', 1)
-    }).toThrow()
-    expect(() => {
-      const m = new Matrix(1, 'a')
-    }).toThrow()
-  })
+  describe('transpose()', () => {
+    it('should transpose a matrix', () => {
+      expect(matrix.transpose([[1, 2, 3]])).toEqual([[1], [2], [3]])
+      expect(matrix.transpose([[1], [2], [3]])).toEqual([[1, 2, 3]])
+      expect(matrix.transpose([[1, 2], [3, 4]])).toEqual([[1, 3], [2, 4]])
+    })
 
-  it('fromArray() should create a matrix object from an array', () => {
-    expect(Matrix.fromArray([1, 2, 3])).toMatchObject({
-      rows: 3,
-      cols: 1,
-      data: [
-        [1],
-        [2],
-        [3]
-      ]
+    it('should throw TypeError when not a matrix is provided', () => {
+      expect(() => {
+        matrix.transpose("wrong input")
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.transpose()
+      }).toThrow(TypeError)
     })
   })
 
-  it('fromArray() should throw an error when no array is provided', () => {
-    expect(() => {
-      Matrix.fromArray(0)
-    }).toThrow()
-  })
+  describe('add()', () => {
+    it('should add two matrices of the same dimension', () => {
+      expect(matrix.add([[1, 2, 3]], [[4, 5, 6]])).toEqual([[5, 7, 9]])
+      expect(matrix.add([[1], [2], [3]], [[4], [5], [6]])).toEqual([[5], [7], [9]])
+      expect(matrix.add([[1, 2], [3, 4]], [[5, 6], [7, 8]])).toEqual([[6, 8], [10, 12]])
+    })
 
-  it('add() should add two matrices of the same dimensions', () => {
-    let m = new Matrix(2, 2)
-    m.data[0] = [1, 2]
-    m.data[1] = [3, 4]
-    let n = new Matrix(2, 2)
-    n.data[0] = [5, 6]
-    n.data[1] = [7, 8]
+    it('should add a scalar to a matrix', () => {
+      expect(matrix.add([[1, 2, 3]], 5)).toEqual([[6, 7, 8]])
+      expect(matrix.add([[1], [2], [3]], 4)).toEqual([[5], [6], [7]])
+      expect(matrix.add([[1, 2], [3, 4]], 5)).toEqual([[6, 7], [8, 9]])
+    })
 
-    expect(Matrix.add(m, n)).toMatchObject({
-      rows: 2,
-      cols: 2,
-      data: [
-        [6, 8],
-        [10, 12]
-      ]
+    it('should throw RangeError when two matrices of incompatible dimensions are given', () => {
+      expect(() => {
+        matrix.add([[1, 2, 3]], [[1], [2], [3]])
+      }).toThrow(RangeError)
+    })
+
+    it('should throw TypeError when other types are provided', () => {
+      expect(() => {
+        matrix.add(1, 2)
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.add("invalid type", 2)
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.add([[1]], "invalid type")
+      }).toThrow(TypeError)
+    })
+
+    it('should throw TypeError if no parameters are given', () => {
+      expect(() => {
+        matrix.add()
+      }).toThrow(TypeError)
     })
   })
 
-  it('add() should throw an error when the first parameter is not a matrix', () => {
-    const m = 0
-    let n = new Matrix(2, 2)
-    n.data[0] = [1, 2]
-    n.data[1] = [3, 4]
+  describe('multiply()', () => {
+    it('should multiply two matrices (matrix multiplication)', () => {
+      expect(matrix.multiply([[1, 2, 3]], [[1], [2], [3]])).toEqual([[14]])
+      expect(matrix.multiply([[1, 2], [1, 2]], [[1], [1]])).toEqual([[3], [3]])
+    })
 
-    expect(() => {
-      Matrix.add(m, n)
-    }).toThrow()
-  })
+    it('should multiply a matrix with a scalar', () => {
+      expect(matrix.multiply([[1, 2, 3]], 2)).toEqual([[2, 4, 6]])
+      expect(matrix.multiply([[1, 2], [3, 4]], 3)).toEqual([[3, 6], [9, 12]])
+    })
 
-  it('add() should throw an error when the second parameter is not a matrix', () => {
-    const m = 0
-    let n = new Matrix(2, 2)
-    n.data[0] = [1, 2]
-    n.data[1] = [3, 4]
+    it('should throw RangeError when matrices are not compatibel for multiplication', () => {
+      expect(() => {
+        matrix.multiply([[1, 2, 3]], [[1, 2, 3]])
+      }).toThrow(RangeError)
+      expect(() => {
+        matrix.multiply([[1, 2], [3, 4]], [[1]])
+      }).toThrow(RangeError)
+    })
 
-    expect(() => {
-      Matrix.add(n, m)
-    }).toThrow()
-  })
+    it('should throw TypeError when no parameter is given', () => {
+      expect(() => {
+        matrix.multiply()
+      }).toThrow(TypeError)
+    })
 
-  it('add() should throw an error when the matrices are not of the same dimensions)', () => {
-    let m = new Matrix(2, 2)
-    m.data[0] = [1, 2]
-    m.data[1] = [3, 4]
-    let n = new Matrix(2, 1)
-    n.data[0] = [5]
-    n.data[1] = [6]
-
-    expect(() => {
-      Matrix.add(m, n)
-    }).toThrow()
-  })
-
-
-  it('transpose() should return the transposed matrix', () => {
-    let m = new Matrix(2, 3)
-    m.data[0] = [1, 2, 3]
-    m.data[1] = [4, 5, 6]
-
-    expect(Matrix.transpose(m)).toMatchObject({
-      rows: 3,
-      cols: 2,
-      data: [
-        [1, 4], 
-        [2, 5], 
-        [3, 6]
-      ]
+    it('should throw TypeError when other types are provided', () => {
+      expect(() => {
+        matrix.multiply(1)
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.multiply("wrong input", 1)
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.multiply([["wrong input"]], 1)
+      }).toThrow(TypeError)
     })
   })
 
-  it('transpose() should return an error when no matrix is provided', () => {
-    const m = 0
-    expect(() => {
-      Matrix.transpose(m)
-    }).toThrow()
-  })
+  describe('isMatrix()', () => {
+    it('should return true if value is a matrix', () => {
+      expect(matrix.isMatrix([[1, 2, 3]])).toBe(true)
+      expect(matrix.isMatrix([[1, 2], [3, 4]])).toBe(true)
+      expect(matrix.isMatrix([[1], [2], [3]])).toBe(true)
+    })
 
-  it('multiply() should multiply two matrices', () => {
-    let m = new Matrix(2, 3)
-    m.data[0] = [1, 2, 1]
-    m.data[1] = [0, 1, 2]
-    let n = new Matrix(3, 1)
-    n.data[0] = [1]
-    n.data[1] = [2]
-    n.data[2] = [0]
+    it('should return false if no value is given', () => {
+      expect(matrix.isMatrix()).toBe(false)
+    })
 
-    expect(Matrix.multiply(m, n)).toMatchObject({
-      rows: 2,
-      cols: 1,
-      data: [
-        [5], 
-        [2]
-      ]
+    it('should return false if value is not a matrix', () => {
+      expect(matrix.isMatrix(0)).toBe(false)
+      expect(matrix.isMatrix('not a matrix')).toBe(false)
+      expect(matrix.isMatrix({matrix: [[1, 2, 3]]})).toBe(false)
+      expect(matrix.isMatrix([1, 2, 3])).toBe(false)
+    })
+
+    //This could lead to worse performance...
+    it('should return false when array contains not number objects', () => {
+      expect(matrix.isMatrix([['wrong input']])).toBe(false)
+    })
+
+    //This could lead to worse performance... 
+    it.skip('should return false if two-dimensional array contains arrays of different sizes', () => {
+      expect(matrix.isMatrix([[1], [1, 2], [1, 2, 3]])).toBe(false)
+      expect(matrix.isMatrix([[1, 2, 3], [1, 2], [1, 2]])).toBe(false)
+      expect(matrix.isMatrix([[1], [1], [1], [1, 2]])).toBe(false)
     })
   })
 
-  it('multiply() should throw an error when the first parameter is not a matrix', () => {
-    const m = 0
-    let n = new Matrix(3, 1)
-    n.data[0] = [1]
-    n.data[1] = [2]
-    n.data[2] = [0]
-
-    expect(() => {
-      Matrix.multiply(m, n)
-    }).toThrow()
-  })
-
-  it('multiply() should throw an error when the second parameter is not a matrix', () => {
-    let m = new Matrix(2, 3)
-    m.data[0] = [1, 2, 1]
-    m.data[1] = [0, 1, 2]
-    const n = 0
-
-    expect(() => {
-      Matrix.multiply(m, n)
-    }).toThrow()
-  })
-
-  it('multiply() should throw an error when the columns of the first matrix do not match the rows of the second matrix', () => {
-    let m = new Matrix(1, 2)
-    m.data[0] = [1, 2]
-    let n = new Matrix(3, 1)
-    n.data[0] = [1]
-    n.data[1] = [2]
-    n.data[2] = [0]
-
-    expect(() => {
-      Matrix.multiply(m, n)
-    }).toThrow()
-  })
-
-  it('randomize() should assign random values between 0 and 1 to each position in the matrix', () => {
-    let m = new Matrix(2, 2)
-    m.randomize()
-
-    let sum = 0
-    for(let i = 0; i < 2; i++) {
-      for(let j = 0; j < 2; j++) {
-        expect(m.data[i][j]).toBeGreaterThanOrEqual(0)
-        expect(m.data[i][j]).toBeLessThanOrEqual(1)
-        sum += m.data[i][j]
+  describe('randomize()', () => {
+    it('should return a new matrix of the same size with values between 0 and 1', () => {
+      const received = matrix.randomize(matrix.createMatrix(4, 4))
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(0)
+          expect(val).toBeLessThanOrEqual(1)
+        }
       }
-    }
-    expect(sum).not.toEqual(0)
-  })
-
-  it('randomize() should be chainable', () => {
-    let m = (new Matrix(1, 1)).randomize()
-
-    expect(m).toBeDefined()
-    expect(m).toMatchObject({
-      rows: 1,
-      cols: 1,
     })
-    expect(m.data).toBeInstanceOf(Array)
-  })
 
-  it('randomize(a, b) should assign random values between a and b', () => {
-    let m = new Matrix(2, 2)
-    m.randomize(2, 3) 
-
-    for(let i = 0; i < 2; i++) {
-      for(let j = 0; j < 2; j++) {
-        expect(m.data[i][j]).toBeGreaterThanOrEqual(2)
-        expect(m.data[i][j]).toBeLessThanOrEqual(3)
+    it('should ignore additional wrong input parameters (matrix, a)', () => {
+      expect(() => {
+        matrix.randomize([[0, 0, 0]], 'wrong_input')
+      }).not.toThrow()
+      const received = matrix.randomize(matrix.createMatrix(4, 4), -3, 'additional input')
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(-3)
+          expect(val).toBeLessThanOrEqual(0)
+        }
       }
-    }
-  })
+    })
 
-  it('randomize(a) should assign random values between 0 and a', () => {
-    let m = new Matrix(2, 2)
-    m.randomize(5) 
-
-    for(let i = 0; i < 2; i++) {
-      for(let j = 0; j < 2; j++) {
-        expect(m.data[i][j]).toBeGreaterThanOrEqual(0)
-        expect(m.data[i][j]).toBeLessThanOrEqual(5)
+    it('should return a new matrix of the same size with values between 0 and a', () => {
+      const received = matrix.randomize(matrix.createMatrix(4, 4), -3)
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(-3)
+          expect(val).toBeLessThanOrEqual(0)
+        }
       }
-    }
+    })
+
+    it('should ignore additional wrong input parameters (matrix, a)', () => {
+      expect(() => {
+        matrix.randomize([[0, 0, 0]], -3, 'wrong_input')
+      }).not.toThrow()
+      const received = matrix.randomize(matrix.createMatrix(4, 4), -3, 'additional input')
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(-3)
+          expect(val).toBeLessThanOrEqual(0)
+        }
+      }
+    })
+
+    it('should return a new matrix of the same size with values between a and b', () => {
+      const received = matrix.randomize(matrix.createMatrix(4, 4), 3, 5)
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(3)
+          expect(val).toBeLessThanOrEqual(5)
+        }
+      }
+    })
+
+    it('should ignore additional wrong input parameters (matrix, a, b)', () => {
+      expect(() => {
+        matrix.randomize([[0, 0, 0]], 0, 5, 'wrong_input')
+      }).not.toThrow()
+      const received = matrix.randomize(matrix.createMatrix(4, 4), 3, 5, 'additional input')
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(3)
+          expect(val).toBeLessThanOrEqual(5)
+        }
+      }
+    })
+
+    it('should return a matrix with a rows and b columns with values between 0 and 1', () => {
+      const received = matrix.randomize(4, 4)
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(0)
+          expect(val).toBeLessThanOrEqual(1)
+        }
+      }
+    })
+
+    it('should return a matrix with a rows and b columns with values between 0 and c', () => {
+      const received = matrix.randomize(4, 4, -3)
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(-3)
+          expect(val).toBeLessThanOrEqual(0)
+        }
+      }
+    })
+
+    it('should return a matrix with a rows and b columns with values between c and d', () => {
+      const received = matrix.randomize(4, 4, 3, 5)
+      expect(received.length).toBe(4)
+      expect(received[0].length).toBe(4)
+      for(let i = 0; i < received.length; i++) {
+        for(let j = 0; j < received[0].length; j++) {
+          const val = received[i][j]
+          expect(isNaN(val)).toBe(false)
+          expect(val).toBeGreaterThanOrEqual(3)
+          expect(val).toBeLessThanOrEqual(5)
+        }
+      }
+    })
+
+    it('should throw TypeError when provided with wrong input', () => {
+      expect(() => {
+        matrix.randomize('wrong input')
+      }).toThrow(TypeError)
+    })
   })
 })
