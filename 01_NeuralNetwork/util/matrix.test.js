@@ -1,6 +1,6 @@
 const matrix = require('./matrix')
 
-describe('matrix-factory', () => {
+describe('matrix', () => {
   
   describe('createMatrix()', () => {
     it('should create a matrix with rows and cols', () => {
