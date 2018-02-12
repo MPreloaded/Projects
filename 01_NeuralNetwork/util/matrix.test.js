@@ -156,7 +156,8 @@ describe('matrix', () => {
     })
 
     //This could lead to worse performance... 
-    it.skip('should return false if two-dimensional array contains arrays of different sizes', () => {
+    //But if the above test runs, this one should also run
+    it('should return false if two-dimensional array contains arrays of different sizes', () => {
       expect(matrix.isMatrix([[1], [1, 2], [1, 2, 3]])).toBe(false)
       expect(matrix.isMatrix([[1, 2, 3], [1, 2], [1, 2]])).toBe(false)
       expect(matrix.isMatrix([[1], [1], [1], [1, 2]])).toBe(false)

@@ -78,7 +78,11 @@ Matrix.add = (a, b) => {
 Matrix.isMatrix = (a) => {
   if(Array.isArray(a)) {
     if(Array.isArray(a[0])) {
+      const length = a[0].length
       for(let i = 0; i < a.length; i++) {
+        if(length != a[i].length) {
+          return false
+        }
         for(let j = 0; j < a[0].length; j++) {
           if(isNaN(a[i][j])) {
             return false
