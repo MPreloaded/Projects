@@ -42,4 +42,40 @@ describe('NeuralNetwork', () => {
       }).toThrow()
     })
   })
+
+  describe('evaluateInput()', () => {
+    it('should take a row matrix of size of input neurons as input', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      expect(() => {
+        nnetwork.evaluateInput([[1, 2]])
+      }).not.toThrow()
+    })
+
+    it('should take a column matrix of size of input neurons as input', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      expect(() => {
+        nnetwork.evaluateInput([[1], [2]])
+      }).not.toThrow()
+    })
+
+    it('should throw a TypeError when size of input does not fit number of input neurons', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      expect(() => {
+        nnetwork.evaluateInput([[1, 2, 3]])
+      }).toThrow(TypeError)
+      expect(() => {
+        nnetwork.evaluateInput([[1], [2], [3]])
+      }).toThrow(TypeError)
+      expect(() => {
+        nnetwork.evaluateInput([1, 2, 3])
+      }).toThrow(TypeError)
+    })
+
+    it('should return a column matrix of size of output neurons when a matrix is given as input', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      const received = nnetwork.evaluateInput([[1], [2]])
+      expect(Matrix.isMatrix(received)).toBe(true)
+      expect(received.length).toBe(3)
+    })
+  })
 })
