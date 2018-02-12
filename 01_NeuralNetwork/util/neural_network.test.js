@@ -58,6 +58,13 @@ describe('NeuralNetwork', () => {
       }).not.toThrow()
     })
 
+    it('should take a array of size of input neurons as input', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      expect(() => {
+        nnetwork.evaluateInput([1, 2])
+      }).not.toThrow()
+    });
+
     it('should throw a TypeError when size of input does not fit number of input neurons', () => {
       const nnetwork = new NeuralNetwork(2, 2, 3)
       expect(() => {
@@ -71,11 +78,38 @@ describe('NeuralNetwork', () => {
       }).toThrow(TypeError)
     })
 
-    it('should return a column matrix of size of output neurons when a matrix is given as input', () => {
+    it('should throw a TypeError when not a row or column matrix is provided', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      expect(() => {
+        nnetwork.evaluateInput([[1, 2], [3, 4]])
+      }).toThrow(TypeError)
+    })
+
+    it('should throw a TypeError when an array with not numbers is provided', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      expect(() => {
+        nnetwork.evaluateInput(['not a number', 1])
+      }).toThrow(TypeError)
+      expect(() => {
+        nnetwork.evaluateInput([1, 'not a number'])
+      }).toThrow(TypeError)
+      expect(() => {
+        nnetwork.evaluateInput(['not a number', 'not a number'])
+      }).toThrow(TypeError)
+    });
+
+    it('should return a row matrix of size of output neurons when a matrix is given as input', () => {
       const nnetwork = new NeuralNetwork(2, 2, 3)
       const received = nnetwork.evaluateInput([[1], [2]])
       expect(Matrix.isMatrix(received)).toBe(true)
-      expect(received.length).toBe(3)
+      expect(received[0].length).toBe(3)
     })
+
+    it('should use matrix multiplication to calculate the output', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 1)
+      nnetwork.weights_i2h = [[1, -1], [0, 1]]
+      nnetwork.weights_h2o = [[-1], [1]]
+      expect(nnetwork.evaluateInput([[1, 1]])).toEqual([[-1]])
+    });
   })
 })
