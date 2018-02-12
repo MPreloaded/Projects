@@ -1,7 +1,6 @@
 const matrix = require('./matrix')
 
 describe('matrix', () => {
-  
   describe('createMatrix()', () => {
     it('should create a matrix with rows and cols', () => {
       expect(matrix.createMatrix(2, 3)).toEqual([[0, 0, 0], [0, 0, 0]])
@@ -304,6 +303,54 @@ describe('matrix', () => {
       expect(() => {
         matrix.randomize('wrong input')
       }).toThrow(TypeError)
+    })
+  })
+
+  describe('isRowMatrix()', () => {
+    it('should return true if a matrix with only one row is input', () => {
+      expect(matrix.isRowMatrix([[1, 2, 3]])).toBe(true)
+    })
+
+    it('should return false if a matrix that has more than one row is provided', () => {
+      expect(matrix.isRowMatrix([[1, 2], [3, 4]])).toBe(false)
+      expect(matrix.isRowMatrix([[1], [2], [3]])).toBe(false)
+    })
+
+    it('should return false if an empty matrix is provided', () => {
+      expect(matrix.isRowMatrix([[]])).toBe(false)
+    })
+
+    it('should return false if nothing is provided', () => {
+      expect(matrix.isRowMatrix()).toBe(false)
+    })
+
+    it('should return false if something other than a matrix is provided', () => {
+      expect(matrix.isRowMatrix('not a row matrix')).toBe(false)
+      expect(matrix.isRowMatrix([1, 2, 3])).toBe(false)
+    })
+  })
+
+  describe('isColumnMatrix()', () => {
+    it('should return true if a matrix with only one column is input', () => {
+      expect(matrix.isColumnMatrix([[1], [2], [3]])).toBe(true)
+    })
+
+    it('should return false if a matrix that has more than one column is provided', () => {
+      expect(matrix.isColumnMatrix([[1, 2], [3, 4]])).toBe(false)
+      expect(matrix.isColumnMatrix([[1, 2, 3]])).toBe(false)
+    })
+
+    it('should return false if an empty matrix is provided', () => {
+      expect(matrix.isColumnMatrix([[]])).toBe(false)
+    })
+
+    it('should return false if nothing is provided', () => {
+      expect(matrix.isColumnMatrix()).toBe(false)
+    })
+
+    it('should return false if something other than a matrix is provided', () => {
+      expect(matrix.isColumnMatrix('not a column matrix')).toBe(false)
+      expect(matrix.isColumnMatrix([1, 2, 3])).toBe(false)
     })
   })
 })

@@ -160,6 +160,28 @@ Matrix.randomize = (a, b, c, d) => {
   throw new TypeError('randomize() cannot operate on the given parameters!')
 }
 
+Matrix.isRowMatrix = (a) => {
+  if(Matrix.isMatrix(a)) {
+    if(a.length == 1) {
+      if(a[0].length > 0) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+Matrix.isColumnMatrix = (a) => {
+  if(Matrix.isMatrix(a)) {
+    if(a.length > 0) {
+      if(a[0].length == 1) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 function _randomize(matrix, min, max) {
   for(let i = 0; i < matrix.length; i++) {
     for(let j = 0; j < matrix[0].length; j++) {
