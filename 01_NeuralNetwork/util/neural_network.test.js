@@ -65,6 +65,16 @@ describe('NeuralNetwork', () => {
       }).not.toThrow()
     });
 
+    it('should take a function as a second argument, which is used as a activation function', () => {
+      //Activation function should be called per hidden and output neuron
+      const mock_fn = jest.fn()
+      mock_fn.mockReturnValue(1)
+
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      nnetwork.evaluateInput([[1, 2]], mock_fn)
+      expect(mock_fn).toHaveBeenCalledTimes(5)
+    })
+
     it('should throw a TypeError when size of input does not fit number of input neurons', () => {
       const nnetwork = new NeuralNetwork(2, 2, 3)
       expect(() => {
@@ -105,11 +115,22 @@ describe('NeuralNetwork', () => {
       expect(received[0].length).toBe(3)
     })
 
+    it('should return an array of size of output neurons, when an array was provided as first parameter', () => {
+      const nnetwork = new NeuralNetwork(2, 2, 3)
+      const received = nnetwork.evaluateInput([1, 2])
+      expect(Array.isArray(received)).toBe(true)
+      expect(received.length).toBe(3)
+    })
+
     it('should use matrix multiplication to calculate the output', () => {
+      // Only test the multiplication part, use identity as activation function
+      const emptyfn = (val) => {
+        return val
+      }
       const nnetwork = new NeuralNetwork(2, 2, 1)
       nnetwork.weights_i2h = [[1, -1], [0, 1]]
       nnetwork.weights_h2o = [[-1], [1]]
-      expect(nnetwork.evaluateInput([[1, 1]])).toEqual([[-1]])
+      expect(nnetwork.evaluateInput([[1, 1]], emptyfn)).toEqual([[-1]])
     });
   })
 })

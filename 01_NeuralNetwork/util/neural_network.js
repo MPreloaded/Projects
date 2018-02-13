@@ -19,8 +19,8 @@ class NeuralNetwork {
   evaluateInput(input, fn = _sigmoid) {
     if(matrix.isMatrix(input)) {
       if(matrix.isRowMatrix(input) && input[0].length == this.input_neurons) {
-        let hidden = matrix.multiply(input, this.weights_i2h)
-        let output = matrix.multiply(hidden, this.weights_h2o)
+        let hidden = matrix.map(matrix.multiply(input, this.weights_i2h), fn)
+        let output = matrix.map(matrix.multiply(hidden, this.weights_h2o), fn)
         return output
       } else if(matrix.isColumnMatrix(input) && input.length == this.input_neurons) {
         return this.evaluateInput(matrix.transpose(input))
@@ -29,7 +29,7 @@ class NeuralNetwork {
     }
 
     if(Array.isArray(input)) {
-      return this.evaluateInput(matrix.createMatrix(input))
+      return matrix.toArray(this.evaluateInput(matrix.createMatrix(input)))
     }
     throw new TypeError('evaluateInput() cannot operate on the given parameters!')
   }
