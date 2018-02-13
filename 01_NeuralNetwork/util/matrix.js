@@ -186,13 +186,37 @@ Matrix.isColumnMatrix = (a) => {
   return false
 }
 
-function _randomize(matrix, min, max) {
-  for(let i = 0; i < matrix.length; i++) {
-    for(let j = 0; j < matrix[0].length; j++) {
-      matrix[i][j] = min + Math.random() * (max - min)
+Matrix.map = (matrix, fn) => {
+  if(Matrix.isMatrix(matrix)) {
+    let result = Matrix.createMatrix(matrix.length, matrix[0].length)
+    for(let i = 0; i < result.length; i++) {
+      for(let j = 0; j < result[0].length; j++) {
+        result[i][j] = fn(matrix[i][j])
+      }
     }
+    return result
   }
-  return matrix
+
+  throw TypeError('map() cannot operate on the given parameters!')
+}
+
+Matrix.toArray = (matrix) => {
+  if(Matrix.isMatrix(matrix)) {
+    let result = []
+    for(let i = 0; i < matrix.length; i++) {
+      for(let j = 0; j < matrix[0].length; j++) {
+        result.push(matrix[i][j])
+      }
+    }
+    return result
+  }
+  return []
+}
+
+function _randomize(matrix, min, max) {
+  return (Matrix.map(matrix, () => {
+    return min + Math.random() * (max - min)
+  }))
 }
 
 function _positiveInteger(a) {

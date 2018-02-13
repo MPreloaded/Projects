@@ -354,4 +354,56 @@ describe('matrix', () => {
       expect(matrix.isColumnMatrix([1, 2, 3])).toBe(false)
     })
   })
+
+  describe('map()', () => {
+    it('should apply a function to each member of a matrix', () => {
+      const mock_fn = jest.fn()
+      mock_fn.mockReturnValue(1)
+      const received = matrix.map([[0, 0], [0, 0]], mock_fn)
+
+      expect(mock_fn).toHaveBeenCalledTimes(4)
+      expect(matrix.isMatrix(received)).toBe(true)
+      expect(received).toEqual([[1, 1], [1, 1]])
+    })
+
+    it('should throw TypeError when not a matrix is provided', () => {
+      expect(() => {
+        matrix.map()
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.map('not a matrix', jest.fn())
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.map([1, 2, 3], jest.fn())
+      }).toThrow(TypeError)
+    })
+
+    it('should throw TypeError when no function is provided as second parameter', () => {
+      expect(() => {
+        matrix.map([[1, 2, 3]])
+      }).toThrow(TypeError)
+      expect(() => {
+        matrix.map([[1, 2, 3]], 'not a function')
+      }).toThrow(TypeError)
+    })
+  })
+
+  describe('toArray()', () => {
+    it('should return a Array', () => {
+      expect(Array.isArray(matrix.toArray([[1, 2, 3]]))).toBe(true)
+    })
+
+    it('should put all elements into the array', () => {
+      expect(matrix.toArray([[1, 2], [3, 4]])).toHaveLength(4)
+    })
+
+    it('should put the elements in order into the array (row by row)', () => {
+      expect(matrix.toArray([[1, 2, 3], [4, 5, 6]])).toEqual([1, 2, 3, 4, 5, 6])
+    })
+
+    it('should return an empty Array when not a matrix is provided', () => {
+      expect(matrix.toArray()).toEqual([])
+      expect(matrix.toArray('not a matrix')).toEqual([])
+    })
+  })
 })
